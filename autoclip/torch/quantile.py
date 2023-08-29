@@ -1,5 +1,5 @@
 from typing import Iterator, List, Dict, Union, Any
-import torch
+import torch, math
 
 from autoclip.torch.clipper import Clipper, OptimizerWithClipping
 
@@ -69,7 +69,7 @@ class QuantileClip(Clipper):
                 state = self.state[parameter]
                 if len(state) == 0:
                     state["history"] = torch.Tensor([]).to(parameter.device)
-                    threshold = torch.inf
+                    threshold = math.inf
                 else:
                     threshold = torch.quantile(state["history"], group_quantile)
                 new_grad_norm = torch.nn.utils.clip_grad_norm_(
